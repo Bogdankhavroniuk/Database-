@@ -1,8 +1,6 @@
-# This is a sample Python script.
-from Funnel import  base_load
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
+from Funnel import  base_load
+from  ServiceWorker import  worker
 
 if __name__ == '__main__':
 
@@ -12,11 +10,19 @@ if __name__ == '__main__':
         sql = """select  physball ,regname , year  from  zno_data 
                           where physball  NOT LIKE 'nan' 
                           ORDER BY regname"""
-        base.load_data()
-        answer = base.output(sql)
+        #base.load_data()
+
 
         f = open("result.txt", "w")
+
+
+        answer = base.output(sql)
         f.truncate(0)
         f.write(answer)
 
         f.close()
+
+        old_db_info = 'postgresql://user1:123321@localhost:5432/lr1_dat'
+        new_db_info = 'postgresql://user1:123321@localhost:5432/new_lr1_dat'
+
+        worker.migrate_and_populate_data(old_db_info, new_db_info)
